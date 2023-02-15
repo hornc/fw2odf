@@ -101,20 +101,23 @@ class FW:
     def style_from_attr(self, attr):
         """Creates an odf style from a FW ATTR."""
         fontsize = f'{attr[3]}pt'
+        properties = {
+            'fontsize': fontsize
+        }
         font = attr[1]
-        fn = 'default'
+        fn = spec = ''
         if font != 0:
             n = len(self.fonts) - font - 1
             fn = self.fonts[n].name
             print(f'FONT FOUND: {font} -- {fn}')
-        #print('FONTSIZE', fontsize)
-        fweight = 'normal'
-        fstyle = 'normal'
         if 'Italic' in fn:
-            fstyle = 'italic'
-        elif 'Bold' in fn:
-            fweight = 'bold'
-        name = f'{fontsize}_{fn}'
+            properties['fontstyle'] = 'italic'
+        if 'Bold' in fn:
+            properties['fontweight'] = 'bold'
+        if attr[7] & 1:
+            spec = '_sup'
+            properties['textposition'] = 'super'
+        name = f'{fontsize}_{fn}{spec}'
         style = Style(name=name, family='text')
-        style.addElement(TextProperties(fontsize=fontsize, fontweight=fweight, fontstyle=fstyle))
+        style.addElement(TextProperties(**properties))
         return style
