@@ -114,6 +114,11 @@ class FW:
             properties['fontstyle'] = 'italic'
         if 'Bold' in fn:
             properties['fontweight'] = 'bold'
+        if attr[5] & 1:
+            properties['textunderlinestyle'] = 'solid'
+            #properties["textunderlinewidth"] = "auto"
+            #properties["textunderlinecolor"] = "font-color"
+            spec = '_und'
         if attr[7] & 1:
             spec = '_sup'
             properties['textposition'] = 'super'
