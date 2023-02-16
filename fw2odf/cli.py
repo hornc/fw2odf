@@ -36,7 +36,7 @@ def main():
             continue
         current_style = fwdoc.style_from_attr(t.attr)
         textdoc.automaticstyles.addElement(current_style)
-        if 'Symbol' in str(current_style.getAttribute('name')):
+        if 'symbol' in str(current_style.getAttribute('name').lower()):
             print(f'SYMBOL got "{t.text}" --> "{from_symbol(t.text)}"')
             text = Span(stylename=current_style, text=from_symbol(t.text))
         else:
