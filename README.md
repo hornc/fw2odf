@@ -30,7 +30,6 @@ Very alpha, I am reverse engineering the Final Writer document format from scrat
  * Proper endnotes (ideally with an option to convert to footnotes)
  * Title page and other section handling
  * Images?
- * Figure out and handle any differences between latin-1 / ISO-8859-1 and [Amiga-1251](https://www.iana.org/assignments/charset-reg/Amiga-1251) charset.
  * What else is encoded in `ATTR`?
  * Spacing and tabs etc? (`RULE`)
  * Heading styles

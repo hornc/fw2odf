@@ -8,7 +8,7 @@ from chunk import Chunk
 from odf.style import Style, TextProperties
 
 
-CHARSET = 'iso-8859-1'  # close to Amiga-1251
+CHARSET = 'iso-8859-1'
 
 
 class Chars:
