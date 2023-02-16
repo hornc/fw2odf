@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 from odf.opendocument import OpenDocumentText
-from odf.text import P, Span
+from odf.text import P, Span, Tab
 
 from fw2odf.finalwriter import FW, Rule
 from fw2odf.symbol import from_symbol
@@ -39,6 +39,8 @@ def main():
         if 'symbol' in str(current_style.getAttribute('name').lower()):
             print(f'SYMBOL got "{t.text}" --> "{from_symbol(t.text)}"')
             text = Span(stylename=current_style, text=from_symbol(t.text))
+        elif t.text == '\t':
+            text = Tab()
         else:
             text = Span(stylename=current_style, text=t.text)
         p.addElement(text)
