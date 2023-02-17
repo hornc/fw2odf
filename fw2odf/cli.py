@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from odf.opendocument import OpenDocumentText
+from odf.style import Style, DefaultStyle, ParagraphProperties
 from odf.text import P, Span, Tab
 
 from fw2odf.finalwriter import FW, Rule
@@ -27,7 +28,16 @@ def main():
     print('DEBUG:', fwdoc.raw.getsize())
 
     textdoc = OpenDocumentText()
-
+    # Justified style
+    justify = Style(name='justified', family='paragraph')
+    justify.addElement(ParagraphProperties(
+        attributes={'textalign': 'justify'}))
+    # Default tab style
+    deftabs = DefaultStyle(family='paragraph')
+    deftabs.addElement(ParagraphProperties(
+        attributes={'tabstopdistance': '0.5in'}))
+    textdoc.styles.addElement(deftabs)
+    textdoc.styles.addElement(justify)
     p = P()
     for t in fwdoc.text:
         if isinstance(t, Rule):
