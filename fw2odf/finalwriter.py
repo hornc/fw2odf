@@ -119,9 +119,12 @@ class FW:
             #properties["textunderlinewidth"] = "auto"
             #properties["textunderlinecolor"] = "font-color"
             spec = '_und'
-        if attr[7] & 1:
+        if attr[7] or (attr[6] & 2):
             spec = '_sup'
             properties['textposition'] = 'super'
+        if attr[6] & 1:
+            spec = '_sub'
+            properties['textposition'] = 'sub'
         name = f'{fontsize}_{fn}{spec}'
         style = Style(name=name, family='text')
         style.addElement(TextProperties(**properties))
