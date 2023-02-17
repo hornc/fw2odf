@@ -4,7 +4,8 @@ import sys
 from pathlib import Path
 
 from odf.opendocument import OpenDocumentText
-from odf.text import P, Span
+from odf.style import Style, DefaultStyle, ParagraphProperties
+from odf.text import P, Span, Tab
 
 from fw2odf.finalwriter import FW, Rule
 from fw2odf.symbol import from_symbol
@@ -27,7 +28,16 @@ def main():
     print('DEBUG:', fwdoc.raw.getsize())
 
     textdoc = OpenDocumentText()
-
+    # Justified style
+    justify = Style(name='justified', family='paragraph')
+    justify.addElement(ParagraphProperties(
+        attributes={'textalign': 'justify'}))
+    # Default tab style
+    deftabs = DefaultStyle(family='paragraph')
+    deftabs.addElement(ParagraphProperties(
+        attributes={'tabstopdistance': '0.5in'}))
+    textdoc.styles.addElement(deftabs)
+    textdoc.styles.addElement(justify)
     p = P()
     for t in fwdoc.text:
         if isinstance(t, Rule):
@@ -39,6 +49,8 @@ def main():
         if 'symbol' in str(current_style.getAttribute('name').lower()):
             print(f'SYMBOL got "{t.text}" --> "{from_symbol(t.text)}"')
             text = Span(stylename=current_style, text=from_symbol(t.text))
+        elif t.text == '\t':
+            text = Tab()
         else:
             text = Span(stylename=current_style, text=t.text)
         p.addElement(text)
