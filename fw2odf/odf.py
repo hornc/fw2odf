@@ -22,6 +22,7 @@ class OpenDocumentText(OpenDocument):
         self.text = Text()
         self.body.addElement(self.text)
         self.add_metadata(source)
+        self.add_styles()
 
     def add_metadata(self, source):
         self.meta.addElement(dc.Date(text='now'))
