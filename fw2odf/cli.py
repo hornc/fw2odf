@@ -2,18 +2,26 @@ import argparse
 
 from pathlib import Path
 
+from odf import dc, meta
+from odf.element import Element
+from odf.namespaces import DCNS
+from odf.office import Meta
 from odf.opendocument import OpenDocumentText
 from odf.style import Style, DefaultStyle, ParagraphProperties
 from odf.text import P, Span, Tab
 
 from fw2odf.finalwriter import FW, Rule
 from fw2odf.symbol import from_symbol
+from fw2odf import __version__
 
 
 DESC = """
-Amiga Final Writer to ODF conversion
+Amiga FinalWriter to ODF conversion
 
 """
+
+
+FW2ODF = f'fw2odf/v{__version__}'
 
 
 def main():
@@ -32,6 +40,10 @@ def main():
         print('DEBUG:', fwdoc.raw.getsize())
 
     textdoc = OpenDocumentText()
+    # Prevent odfpy from overwriting our generator metadata
+    # TODO: make our own OpenDocument class...
+    textdoc._OpenDocument__replaceGenerator = lambda: None
+
     # Justified style
     justify = Style(name='justified', family='paragraph')
     justify.addElement(ParagraphProperties(
@@ -60,6 +72,15 @@ def main():
             text = Span(stylename=current_style, text=t.text)
         p.addElement(text)
 
+    textdoc.meta = Meta()
+    textdoc.meta.addElement(meta.Generator(text=FW2ODF))
+    textdoc.meta.addElement(dc.Date(text='now'))
+    textdoc.meta.addElement(meta.UserDefined(name='source', text=f.name))
+    #textdoc.meta.addElement(Element(qname=(DCNS, 'source'), text=f.name, check_grammar=False))
+    #textdoc.meta.addElement(dc.Source(text=f.name))
+    #textdoc.meta.addElement(meta.InitialCreator(text='Original Author'))
+    textdoc.meta.addElement(meta.CreationDate(text='then'))
+    print('DEBUG:', textdoc.meta)
     textdoc.save(outfile.name)
 
 
