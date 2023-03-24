@@ -64,5 +64,3 @@ class OpenDocumentText(OpenDocument):
         Prevent odfpy from overwriting our generator metadata.
         """
         pass
-
-
