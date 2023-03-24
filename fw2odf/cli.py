@@ -10,8 +10,8 @@ from fw2odf.odf import OpenDocumentText
 from fw2odf.symbol import from_symbol
 
 
-DESC = """
-Amiga FinalWriter to ODF conversion
+DESC = f"""
+Amiga FinalWriter to ODF conversion v{__version__}
 
 """
 
@@ -19,7 +19,7 @@ Amiga FinalWriter to ODF conversion
 def main():
     parser = argparse.ArgumentParser(description=DESC)
     parser.add_argument('source', help='Input FinalWriter file (.fw)', type=argparse.FileType('rb'))
-    parser.add_argument('-d', '--debug', help='Debug', action='store_true')
+    parser.add_argument('-d', '--debug', help='debug', action='store_true')
     args = parser.parse_args()
 
     f = args.source
