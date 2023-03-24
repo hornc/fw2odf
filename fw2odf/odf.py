@@ -17,6 +17,7 @@ from fw2odf import __version__
 
 FW2ODF = f'fw2odf/v{__version__}'
 ODT_MIMETYPE = 'application/vnd.oasis.opendocument.text'
+URL = 'https://github.com/hornc/fw2odf'
 
 
 class OpenDocumentText(OpenDocument):
@@ -30,16 +31,21 @@ class OpenDocumentText(OpenDocument):
         self.add_styles()
 
     def add_metadata(self):
-        now = datetime.now().isoformat()
-        then = datetime.fromtimestamp(os.path.getmtime(self.source)).isoformat()
+        now = datetime.now()
+        then = datetime.fromtimestamp(os.path.getmtime(self.source))
+        description = (
+            f'Converted from Amiga FinalWriter document "{self.source}"\n'
+            f'using {FW2ODF} ({URL}), at {now.strftime("%Y-%m-%d %H:%M:%S")}.'
+        )
         self.meta.addElement(meta.Generator(text=FW2ODF))
-        self.meta.addElement(meta.CreationDate(text=then))
-        self.meta.addElement(dc.Date(text=now))
+        self.meta.addElement(meta.CreationDate(text=then.isoformat()))
+        self.meta.addElement(dc.Date(text=now.isoformat()))
+        self.meta.addElement(dc.Title(text=self.source))
         self.meta.addElement(meta.UserDefined(name='source', text=self.source))
+        self.meta.addElement(dc.Description(text=description))
         # self.meta.addElement(Element(qname=(DCNS, 'source'), text=self.source, check_grammar=False))
         # self.meta.addElement(dc.Source(text=self.source))
         # self.meta.addElement(meta.InitialCreator(text='Original Author'))
-        print('DEBUG:', self.meta)
 
     def add_styles(self):
         # Justified style
