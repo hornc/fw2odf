@@ -2,16 +2,16 @@ import argparse
 
 from pathlib import Path
 
-from odf.opendocument import OpenDocumentText
-from odf.style import Style, DefaultStyle, ParagraphProperties
 from odf.text import P, Span, Tab
 
+from fw2odf import __version__
 from fw2odf.finalwriter import FW, Rule
+from fw2odf.odf import OpenDocumentText
 from fw2odf.symbol import from_symbol
 
 
-DESC = """
-Amiga Final Writer to ODF conversion
+DESC = f"""
+Amiga FinalWriter to ODF conversion v{__version__}
 
 """
 
@@ -19,7 +19,7 @@ Amiga Final Writer to ODF conversion
 def main():
     parser = argparse.ArgumentParser(description=DESC)
     parser.add_argument('source', help='Input FinalWriter file (.fw)', type=argparse.FileType('rb'))
-    parser.add_argument('-d', '--debug', help='Debug', action='store_true')
+    parser.add_argument('-d', '--debug', help='debug', action='store_true')
     args = parser.parse_args()
 
     f = args.source
@@ -31,17 +31,8 @@ def main():
         print('DEBUG:', fwdoc.raw)
         print('DEBUG:', fwdoc.raw.getsize())
 
-    textdoc = OpenDocumentText()
-    # Justified style
-    justify = Style(name='justified', family='paragraph')
-    justify.addElement(ParagraphProperties(
-        attributes={'textalign': 'justify'}))
-    # Default tab style
-    deftabs = DefaultStyle(family='paragraph')
-    deftabs.addElement(ParagraphProperties(
-        attributes={'tabstopdistance': '0.5in'}))
-    textdoc.styles.addElement(deftabs)
-    textdoc.styles.addElement(justify)
+    textdoc = OpenDocumentText(source=f.name)
+
     p = P()
     for t in fwdoc.text:
         if isinstance(t, Rule):
