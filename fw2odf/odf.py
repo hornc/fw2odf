@@ -1,3 +1,7 @@
+import os
+
+from datetime import datetime
+
 from odf import dc, meta
 from odf.office import Text, Meta
 from odf.opendocument import OpenDocument
@@ -18,20 +22,23 @@ ODT_MIMETYPE = 'application/vnd.oasis.opendocument.text'
 class OpenDocumentText(OpenDocument):
     def __init__(self, source):
         super().__init__(ODT_MIMETYPE)
+        self.source = source
         self.meta = Meta()
         self.text = Text()
         self.body.addElement(self.text)
-        self.add_metadata(source)
+        self.add_metadata()
         self.add_styles()
 
-    def add_metadata(self, source):
-        self.meta.addElement(dc.Date(text='now'))
-        self.meta.addElement(meta.UserDefined(name='source', text=source))
-        #self.meta.addElement(Element(qname=(DCNS, 'source'), text=source, check_grammar=False))
-        #self.meta.addElement(dc.Source(text=source))
-        #self.meta.addElement(meta.InitialCreator(text='Original Author'))
-        self.meta.addElement(meta.CreationDate(text='then'))
+    def add_metadata(self):
+        now = datetime.now().isoformat()
+        then = datetime.fromtimestamp(os.path.getmtime(self.source)).isoformat()
         self.meta.addElement(meta.Generator(text=FW2ODF))
+        self.meta.addElement(meta.CreationDate(text=then))
+        self.meta.addElement(dc.Date(text=now))
+        self.meta.addElement(meta.UserDefined(name='source', text=self.source))
+        # self.meta.addElement(Element(qname=(DCNS, 'source'), text=self.source, check_grammar=False))
+        # self.meta.addElement(dc.Source(text=self.source))
+        # self.meta.addElement(meta.InitialCreator(text='Original Author'))
         print('DEBUG:', self.meta)
 
     def add_styles(self):
