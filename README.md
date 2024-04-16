@@ -7,9 +7,9 @@ FinalWriter (Amiga word processor) to Open Document Format conversion
     cd fw2odf
     pip install .
 
-This will make the `fw2doc` command available.
+This will make the `fw2odf` command available.
 
-    fw2doc sample.fw
+    fw2odf sample.fw
 
 Will produce an output file `sample.odf`.
 
